@@ -1,0 +1,31 @@
+name: N1 durable distribution qualification
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact history without persisted write credential
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install pinned Go toolchain
+        uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5.0.2
+        with:
+          go-version: 1.25.12
+          cache: false
+      - name: Rebuild, simulate publication and qualify as a fresh consumer
+        env:
+          N1_REMOTE_POLICY: github-origin
+        run: scripts/full-d1-gate.sh "${RUNNER_TEMP}/foigent-integration-control-d1-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"

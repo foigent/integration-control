@@ -37,4 +37,5 @@ There is deliberately no signing command, private key, product adapter,
 network transport, database client, deployment control, worker control,
 BOOTSTRAP action or TRAFFIC action.
 
-See docs/CONTRACTS.md, docs/CAPABILITY-BOUNDARY.md and docs/RELEASE.md.
+See docs/CONTRACTS.md, docs/CAPABILITY-BOUNDARY.md, docs/RELEASE.md and
+docs/DURABLE-DISTRIBUTION.md.
