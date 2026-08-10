@@ -1,0 +1,349 @@
+{
+  "$defs": {
+    "artifact_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "authorization_window": {
+      "additionalProperties": false,
+      "properties": {
+        "not_after": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "not_before": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_before",
+        "not_after"
+      ],
+      "type": "object"
+    },
+    "contract_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "sha256"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.foigent.local/foigent.integration-campaign-manifest.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Product-neutral immutable preauthorization scope for one POC Source-evidence campaign.",
+  "properties": {
+    "authorization_signing": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "const": "foigent.integration-campaign-authorization.v1",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "integration_campaign_authorization",
+          "type": "string"
+        },
+        "trust_set_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "purpose",
+        "domain",
+        "trust_set_sha256"
+      ],
+      "type": "object"
+    },
+    "campaign_id": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "type": "string"
+    },
+    "canonicalization": {
+      "const": "foigent.integration-control.canonical-json.v1",
+      "type": "string"
+    },
+    "components": {
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "contract": {
+              "$ref": "#/$defs/contract_reference"
+            },
+            "product": {
+              "const": "unirouter",
+              "type": "string"
+            },
+            "release": {
+              "$ref": "#/$defs/artifact_reference"
+            },
+            "role": {
+              "const": "source_evidence_producer",
+              "type": "string"
+            },
+            "scope_receipt": {
+              "$ref": "#/$defs/artifact_reference"
+            }
+          },
+          "required": [
+            "product",
+            "role",
+            "contract",
+            "release",
+            "scope_receipt"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "contract": {
+              "$ref": "#/$defs/contract_reference"
+            },
+            "product": {
+              "const": "xinsight",
+              "type": "string"
+            },
+            "release": {
+              "$ref": "#/$defs/artifact_reference"
+            },
+            "role": {
+              "const": "source_evidence_consumer",
+              "type": "string"
+            },
+            "scope_receipt": {
+              "$ref": "#/$defs/artifact_reference"
+            }
+          },
+          "required": [
+            "product",
+            "role",
+            "contract",
+            "release",
+            "scope_receipt"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "array"
+    },
+    "decision_id": {
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "type": "string"
+    },
+    "decision_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "explicit_exclusions": {
+      "maxItems": 8,
+      "minItems": 8,
+      "prefixItems": [
+        {
+          "const": "bootstrap",
+          "type": "string"
+        },
+        {
+          "const": "credential_mutation",
+          "type": "string"
+        },
+        {
+          "const": "data_reset",
+          "type": "string"
+        },
+        {
+          "const": "deployment",
+          "type": "string"
+        },
+        {
+          "const": "production",
+          "type": "string"
+        },
+        {
+          "const": "target_trust_mutation",
+          "type": "string"
+        },
+        {
+          "const": "traffic_outside_frozen_request_set",
+          "type": "string"
+        },
+        {
+          "const": "worker_activation",
+          "type": "string"
+        }
+      ],
+      "type": "array"
+    },
+    "frozen_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "profile": {
+      "const": "poc_source_evidence",
+      "type": "string"
+    },
+    "request_set": {
+      "additionalProperties": false,
+      "properties": {
+        "max_facts": {
+          "const": 200
+        },
+        "max_requests": {
+          "const": 20
+        },
+        "schema_version": {
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "sha256",
+        "max_requests",
+        "max_facts"
+      ],
+      "type": "object"
+    },
+    "requested_actions": {
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {
+          "const": "poc_traffic",
+          "type": "string"
+        },
+        {
+          "const": "unirouter_source_evidence_capture",
+          "type": "string"
+        },
+        {
+          "const": "xinsight_source_evidence_import",
+          "type": "string"
+        }
+      ],
+      "type": "array"
+    },
+    "requested_window": {
+      "$ref": "#/$defs/authorization_window"
+    },
+    "schema_version": {
+      "const": "foigent.integration-campaign-manifest.v1",
+      "type": "string"
+    },
+    "source_binding": {
+      "$ref": "#/$defs/artifact_reference"
+    },
+    "source_evidence_signing": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_scope": {
+          "const": "unirouter.poc-source-facts.v1",
+          "type": "string"
+        },
+        "domain": {
+          "const": "unirouter.source-evidence.component.v1",
+          "type": "string"
+        },
+        "nested_execution_evidence_v2": {
+          "const": "partial",
+          "type": "string"
+        },
+        "package_scope_state": {
+          "const": "complete",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "source_evidence",
+          "type": "string"
+        },
+        "runtime_close_marker_available": {
+          "const": false
+        },
+        "signer_public_key_id": {
+          "pattern": "^ed25519:sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "signing_key_ref": {
+          "maxLength": 160,
+          "pattern": "^source-evidence-[A-Za-z0-9._:/-]+$",
+          "type": "string"
+        },
+        "trust_set_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "purpose",
+        "domain",
+        "signing_key_ref",
+        "signer_public_key_id",
+        "trust_set_sha256",
+        "claim_scope",
+        "package_scope_state",
+        "nested_execution_evidence_v2",
+        "runtime_close_marker_available"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "canonicalization",
+    "profile",
+    "decision_id",
+    "decision_sha256",
+    "campaign_id",
+    "frozen_at",
+    "requested_actions",
+    "requested_window",
+    "explicit_exclusions",
+    "source_binding",
+    "request_set",
+    "components",
+    "source_evidence_signing",
+    "authorization_signing"
+  ],
+  "title": "foigent.integration-campaign-manifest.v1",
+  "type": "object"
+}

@@ -1,0 +1,282 @@
+{
+  "$defs": {
+    "acknowledgement_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "acknowledgement_schema_version": {
+          "const": "foigent.integration-campaign-component-ack.v1",
+          "type": "string"
+        },
+        "acknowledgement_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "campaign_manifest_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "product": {
+          "enum": [
+            "unirouter",
+            "xinsight"
+          ]
+        }
+      },
+      "required": [
+        "product",
+        "acknowledgement_schema_version",
+        "acknowledgement_sha256",
+        "campaign_manifest_sha256"
+      ],
+      "type": "object"
+    },
+    "artifact_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "authorization_window": {
+      "additionalProperties": false,
+      "properties": {
+        "not_after": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "not_before": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_before",
+        "not_after"
+      ],
+      "type": "object"
+    },
+    "component_acknowledgement": {
+      "additionalProperties": false,
+      "properties": {
+        "campaign_manifest_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "component_contract": {
+          "$ref": "#/$defs/contract_reference"
+        },
+        "component_scope_receipt": {
+          "$ref": "#/$defs/artifact_reference"
+        },
+        "product": {
+          "enum": [
+            "unirouter",
+            "xinsight"
+          ]
+        },
+        "product_verification_receipt": {
+          "$ref": "#/$defs/artifact_reference"
+        },
+        "schema_version": {
+          "const": "foigent.integration-campaign-component-ack.v1",
+          "type": "string"
+        },
+        "status": {
+          "const": "accepted",
+          "type": "string"
+        },
+        "verified_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "verifier_release": {
+          "$ref": "#/$defs/contract_reference"
+        }
+      },
+      "required": [
+        "schema_version",
+        "product",
+        "campaign_manifest_sha256",
+        "component_contract",
+        "component_scope_receipt",
+        "product_verification_receipt",
+        "verifier_release",
+        "status",
+        "verified_at"
+      ],
+      "type": "object"
+    },
+    "contract_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "sha256"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.foigent.local/foigent.integration-campaign-authorization.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "User decision binding for one exact manifest and two product-owned component acknowledgements.",
+  "properties": {
+    "authorization_id": {
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "type": "string"
+    },
+    "authorization_window": {
+      "$ref": "#/$defs/authorization_window"
+    },
+    "authorized_actions": {
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {
+          "const": "poc_traffic",
+          "type": "string"
+        },
+        {
+          "const": "unirouter_source_evidence_capture",
+          "type": "string"
+        },
+        {
+          "const": "xinsight_source_evidence_import",
+          "type": "string"
+        }
+      ],
+      "type": "array"
+    },
+    "campaign_id": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "type": "string"
+    },
+    "campaign_manifest_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "canonicalization": {
+      "const": "foigent.integration-control.canonical-json.v1",
+      "type": "string"
+    },
+    "component_acknowledgements": {
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "acknowledgement_schema_version": {
+              "const": "foigent.integration-campaign-component-ack.v1",
+              "type": "string"
+            },
+            "acknowledgement_sha256": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "campaign_manifest_sha256": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "product": {
+              "const": "unirouter",
+              "type": "string"
+            }
+          },
+          "required": [
+            "product",
+            "acknowledgement_schema_version",
+            "acknowledgement_sha256",
+            "campaign_manifest_sha256"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "acknowledgement_schema_version": {
+              "const": "foigent.integration-campaign-component-ack.v1",
+              "type": "string"
+            },
+            "acknowledgement_sha256": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "campaign_manifest_sha256": {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "product": {
+              "const": "xinsight",
+              "type": "string"
+            }
+          },
+          "required": [
+            "product",
+            "acknowledgement_schema_version",
+            "acknowledgement_sha256",
+            "campaign_manifest_sha256"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "array"
+    },
+    "confirmation_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "confirmed_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "decision_id": {
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "foigent.integration-campaign-authorization.v1",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "canonicalization",
+    "authorization_id",
+    "decision_id",
+    "campaign_id",
+    "campaign_manifest_sha256",
+    "component_acknowledgements",
+    "authorized_actions",
+    "authorization_window",
+    "confirmed_at",
+    "confirmation_sha256"
+  ],
+  "title": "foigent.integration-campaign-authorization.v1",
+  "type": "object"
+}

@@ -1,0 +1,165 @@
+{
+  "$id": "https://schemas.foigent.local/foigent.integration-control.release.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Reproducible local release evidence for the offline neutral control asset.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "architecture": {
+            "maxLength": 40,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "type": "string"
+          },
+          "os": {
+            "maxLength": 40,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "type": "string"
+          },
+          "path": {
+            "maxLength": 240,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path",
+          "os",
+          "architecture",
+          "size_bytes",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "canonicalization": {
+      "const": "foigent.integration-control.canonical-json.v1",
+      "type": "string"
+    },
+    "capability_boundary": {
+      "const": "offline_files_only",
+      "type": "string"
+    },
+    "contracts_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "double_build_equal": {
+      "const": true
+    },
+    "effects": {
+      "additionalProperties": false,
+      "properties": {
+        "credential_or_key_access": {
+          "const": 0
+        },
+        "product_db_or_api_access": {
+          "const": 0
+        },
+        "product_repository_edit": {
+          "const": 0
+        },
+        "target_access": {
+          "const": 0
+        },
+        "worker_or_traffic": {
+          "const": 0
+        }
+      },
+      "required": [
+        "target_access",
+        "product_repository_edit",
+        "product_db_or_api_access",
+        "credential_or_key_access",
+        "worker_or_traffic"
+      ],
+      "type": "object"
+    },
+    "gates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+            "type": "string"
+          },
+          "status": {
+            "const": "pass",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "status"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "go_version": {
+      "const": "go1.25.0",
+      "type": "string"
+    },
+    "invalid_fixtures_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "foigent.integration-control.release.v1",
+      "type": "string"
+    },
+    "source_commit": {
+      "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$",
+      "type": "string"
+    },
+    "source_tree": {
+      "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$",
+      "type": "string"
+    },
+    "toolchain": {
+      "const": "go1.25.12",
+      "type": "string"
+    },
+    "valid_fixtures_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+(-[A-Za-z0-9][A-Za-z0-9.-]*)?$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "canonicalization",
+    "version",
+    "source_commit",
+    "source_tree",
+    "go_version",
+    "toolchain",
+    "contracts_sha256",
+    "valid_fixtures_sha256",
+    "invalid_fixtures_sha256",
+    "artifacts",
+    "double_build_equal",
+    "capability_boundary",
+    "gates",
+    "effects"
+  ],
+  "title": "foigent.integration-control.release.v1",
+  "type": "object"
+}

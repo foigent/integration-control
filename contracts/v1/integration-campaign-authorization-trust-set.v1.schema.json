@@ -1,0 +1,86 @@
+{
+  "$id": "https://schemas.foigent.local/foigent.integration-campaign-authorization-trust-set.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Immutable purpose-specific public authorization trust set.",
+  "properties": {
+    "domain": {
+      "const": "foigent.integration-campaign-authorization.v1",
+      "type": "string"
+    },
+    "keys": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "algorithm": {
+            "const": "ed25519",
+            "type": "string"
+          },
+          "public_key": {
+            "maxLength": 44,
+            "pattern": "^[A-Za-z0-9+/]{43}=$",
+            "type": "string"
+          },
+          "signer_public_key_id": {
+            "pattern": "^ed25519:sha256:[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "signing_key_ref": {
+            "maxLength": 160,
+            "pattern": "^integration-authorization-[A-Za-z0-9._:/-]+$",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          },
+          "valid_from": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "valid_until": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "signing_key_ref",
+          "signer_public_key_id",
+          "algorithm",
+          "public_key",
+          "status",
+          "valid_from",
+          "valid_until"
+        ],
+        "type": "object"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "type": "array"
+    },
+    "purpose": {
+      "const": "integration_campaign_authorization",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "foigent.integration-campaign-authorization-trust-set.v1",
+      "type": "string"
+    },
+    "trust_set_ref": {
+      "maxLength": 160,
+      "pattern": "^integration-authorization-trust-[A-Za-z0-9._:/-]+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "purpose",
+    "domain",
+    "trust_set_ref",
+    "keys"
+  ],
+  "title": "foigent.integration-campaign-authorization-trust-set.v1",
+  "type": "object"
+}
