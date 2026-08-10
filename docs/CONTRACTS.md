@@ -45,6 +45,21 @@ installed release input is likewise limited to the product receipt facts:
 sequence, version, canonical commit, package digest, signing-key identity,
 database schema and observation time; it does not claim a runtime tree.
 
+The poc_source_evidence profile is closed over three normative identities:
+
+- Source binding: unirouter.source-evidence.source-scope.v1;
+- frozen request set: unirouter.source-evidence.request-set.v1;
+- UniRouter producer component: unirouter.source-evidence.component-package.v1.
+
+Both typed validation and the projected manifest schema enforce these exact
+identities. A valid digest over a different object type is rejected before M
+can become canonical or signable. Product acknowledgement remains mandatory,
+but it is defense in depth rather than the only contract-identity gate.
+
+The identities above are normative. The committed product release, scope and
+verification receipt bodies contain synthetic fixture facts and are only
+opaque byte-binding inputs; they are not interoperable product authority.
+
 ## Component acknowledgement boundary
 
 The common acknowledgement envelope is defined under

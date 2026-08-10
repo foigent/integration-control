@@ -84,6 +84,32 @@ func TestAuthorizationSchemaOwnsCommonAcknowledgementEnvelope(t *testing.T) {
 	}
 }
 
+func TestManifestProjectionPinsFixedPOCContractIdentities(t *testing.T) {
+	projected, err := ProjectedSchemas()
+	if err != nil {
+		t.Fatal(err)
+	}
+	var schema map[string]any
+	if err := json.Unmarshal(projected[ManifestSchemaFile], &schema); err != nil {
+		t.Fatal(err)
+	}
+	properties := schema["properties"].(map[string]any)
+	source := properties["source_binding"].(map[string]any)["properties"].(map[string]any)
+	requestSet := properties["request_set"].(map[string]any)["properties"].(map[string]any)
+	components := properties["components"].(map[string]any)["prefixItems"].([]any)
+	uniComponent := components[0].(map[string]any)["properties"].(map[string]any)
+	uniContract := uniComponent["contract"].(map[string]any)["properties"].(map[string]any)
+	if source["schema_version"].(map[string]any)["const"] != SourceBindingSchemaVersion {
+		t.Fatal("projected manifest widens the Source binding identity")
+	}
+	if requestSet["schema_version"].(map[string]any)["const"] != RequestSetSchemaVersion {
+		t.Fatal("projected manifest widens the request-set identity")
+	}
+	if uniContract["id"].(map[string]any)["const"] != UniRouterComponentContractID {
+		t.Fatal("projected manifest widens the UniRouter component contract identity")
+	}
+}
+
 func TestNestedTypedFieldsMatchProjectedSchemas(t *testing.T) {
 	projected, err := ProjectedSchemas()
 	if err != nil {

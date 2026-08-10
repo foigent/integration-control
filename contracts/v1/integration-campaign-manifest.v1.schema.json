@@ -102,7 +102,22 @@
           "additionalProperties": false,
           "properties": {
             "contract": {
-              "$ref": "#/$defs/contract_reference"
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "const": "unirouter.source-evidence.component-package.v1",
+                  "type": "string"
+                },
+                "sha256": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "sha256"
+              ],
+              "type": "object"
             },
             "product": {
               "const": "unirouter",
@@ -132,7 +147,22 @@
           "additionalProperties": false,
           "properties": {
             "contract": {
-              "$ref": "#/$defs/contract_reference"
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "const": "xinsight.signed-campaign-package-consumer.v1",
+                  "type": "string"
+                },
+                "sha256": {
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "sha256"
+              ],
+              "type": "object"
             },
             "product": {
               "const": "xinsight",
@@ -227,8 +257,7 @@
           "const": 20
         },
         "schema_version": {
-          "maxLength": 200,
-          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "const": "unirouter.source-evidence.request-set.v1",
           "type": "string"
         },
         "sha256": {
@@ -271,7 +300,22 @@
       "type": "string"
     },
     "source_binding": {
-      "$ref": "#/$defs/artifact_reference"
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "unirouter.source-evidence.source-scope.v1",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "sha256"
+      ],
+      "type": "object"
     },
     "source_evidence_signing": {
       "additionalProperties": false,

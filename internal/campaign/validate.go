@@ -54,8 +54,11 @@ func ValidateManifest(value Manifest) error {
 	if err := validateArtifactReference(value.SourceBinding); err != nil {
 		return fmt.Errorf("manifest Source binding: %w", err)
 	}
+	if value.SourceBinding.SchemaVersion != SourceBindingSchemaVersion {
+		return errors.New("campaign manifest Source binding contract identity is invalid")
+	}
 	if value.RequestSet.MaxRequests != 20 || value.RequestSet.MaxFacts != 200 ||
-		!validSchemaVersion(value.RequestSet.SchemaVersion) ||
+		value.RequestSet.SchemaVersion != RequestSetSchemaVersion ||
 		!digestPattern.MatchString(value.RequestSet.SHA256) {
 		return errors.New("campaign manifest request-set binding is invalid")
 	}
@@ -64,9 +67,13 @@ func ValidateManifest(value Manifest) error {
 	}
 	expectedProducts := []string{"unirouter", "xinsight"}
 	expectedRoles := []string{"source_evidence_producer", "source_evidence_consumer"}
+	expectedContractIDs := []string{UniRouterComponentContractID, XInsightComponentContractID}
 	for index, component := range value.Components {
 		if component.Product != expectedProducts[index] || component.Role != expectedRoles[index] {
 			return errors.New("campaign manifest components are not in the exact product-role order")
+		}
+		if component.Contract.ID != expectedContractIDs[index] {
+			return fmt.Errorf("campaign manifest component %s contract identity is invalid", component.Product)
 		}
 		if err := validateContractReference(component.Contract); err != nil {
 			return fmt.Errorf("manifest component %s contract: %w", component.Product, err)

@@ -12,6 +12,11 @@ const (
 
 	ManifestProfile = "poc_source_evidence"
 
+	SourceBindingSchemaVersion   = "unirouter.source-evidence.source-scope.v1"
+	RequestSetSchemaVersion      = "unirouter.source-evidence.request-set.v1"
+	UniRouterComponentContractID = "unirouter.source-evidence.component-package.v1"
+	XInsightComponentContractID  = "xinsight.signed-campaign-package-consumer.v1"
+
 	SourceEvidencePurpose = "source_evidence"
 	SourceEvidenceDomain  = "unirouter.source-evidence.component.v1"
 

@@ -89,6 +89,18 @@ func TestUniRouterFixtureUsesAcceptedSourceScopeAndReleaseAuthority(t *testing.T
 	if requestSet["source_instance"] != source["source_instance"] {
 		t.Fatal("Source scope source_instance does not come from the frozen request set")
 	}
+	if requestSet["schema_version"] != RequestSetSchemaVersion {
+		t.Fatalf("request-set fixture uses non-normative identity %v", requestSet["schema_version"])
+	}
+	manifest, err := DecodeCanonicalManifest(fixture(t, "manifest.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if manifest.SourceBinding.SchemaVersion != SourceBindingSchemaVersion ||
+		manifest.RequestSet.SchemaVersion != RequestSetSchemaVersion ||
+		manifest.Components[0].Contract.ID != UniRouterComponentContractID {
+		t.Fatal("positive manifest does not use the fixed POC profile contract identities")
+	}
 	var release map[string]any
 	if err := json.Unmarshal(fixture(t, "unirouter-release.json"), &release); err != nil {
 		t.Fatal(err)
@@ -100,6 +112,37 @@ func TestUniRouterFixtureUsesAcceptedSourceScopeAndReleaseAuthority(t *testing.T
 		if release[required] == nil {
 			t.Fatalf("UniRouter installed release fixture is missing %s", required)
 		}
+	}
+}
+
+func TestManifestFixedProfileRejectsWrongContractIdentities(t *testing.T) {
+	original, err := DecodeCanonicalManifest(fixture(t, "manifest.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	tests := []struct {
+		name   string
+		mutate func(*Manifest)
+	}{
+		{"wrong Source binding identity", func(value *Manifest) {
+			value.SourceBinding.SchemaVersion = "unirouter.source-evidence.source-scope.v2"
+		}},
+		{"wrong request-set identity", func(value *Manifest) {
+			value.RequestSet.SchemaVersion = "foigent.poc-request-set.v1"
+		}},
+		{"wrong UniRouter component contract identity", func(value *Manifest) {
+			value.Components[0].Contract.ID = "unirouter.source-evidence.component.v1"
+		}},
+	}
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			mutated := original
+			mutated.Components = append([]ComponentInput(nil), original.Components...)
+			testCase.mutate(&mutated)
+			if err := ValidateManifest(mutated); err == nil {
+				t.Fatal("fixed POC profile accepted a widened contract identity")
+			}
+		})
 	}
 }
 
@@ -408,11 +451,37 @@ func TestCommittedInvalidFixturesFailClosed(t *testing.T) {
 			_, err := DecodeManifest(body)
 			return err
 		}},
+		{"manifest-wrong-source-identity.json", func(body []byte) error {
+			_, err := DecodeManifest(body)
+			return err
+		}},
+		{"manifest-wrong-request-set-identity.json", func(body []byte) error {
+			_, err := DecodeManifest(body)
+			return err
+		}},
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
 			if err := testCase.verify(invalidFixture(t, testCase.name)); err == nil {
 				t.Fatal("invalid fixture was accepted")
+			}
+		})
+	}
+}
+
+func TestCommittedWrongProfileIdentityFixturesFailForTheNamedIdentity(t *testing.T) {
+	tests := []struct {
+		name string
+		want string
+	}{
+		{"manifest-wrong-source-identity.json", "Source binding contract identity is invalid"},
+		{"manifest-wrong-request-set-identity.json", "request-set binding is invalid"},
+	}
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			_, err := DecodeManifest(invalidFixture(t, testCase.name))
+			if err == nil || !strings.Contains(err.Error(), testCase.want) {
+				t.Fatalf("expected %q rejection, got %v", testCase.want, err)
 			}
 		})
 	}

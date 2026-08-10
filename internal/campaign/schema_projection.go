@@ -100,11 +100,14 @@ func CheckProjectedSchemas(directory string) error {
 }
 
 func manifestSchema() schemaObject {
-	component := func(product, role string) schemaObject {
+	component := func(product, role, contractID string) schemaObject {
 		return objectSchema(schemaObject{
-			"product":       constString(product),
-			"role":          constString(role),
-			"contract":      ref("#/$defs/contract_reference"),
+			"product": constString(product),
+			"role":    constString(role),
+			"contract": objectSchema(schemaObject{
+				"id":     constString(contractID),
+				"sha256": digestString(),
+			}, "id", "sha256"),
 			"release":       ref("#/$defs/artifact_reference"),
 			"scope_receipt": ref("#/$defs/artifact_reference"),
 		}, "product", "role", "contract", "release", "scope_receipt")
@@ -123,18 +126,24 @@ func manifestSchema() schemaObject {
 			"requested_actions":   exactStringArray(RequiredRequestedActions),
 			"requested_window":    ref("#/$defs/authorization_window"),
 			"explicit_exclusions": exactStringArray(RequiredExplicitExclusions),
-			"source_binding":      ref("#/$defs/artifact_reference"),
+			"source_binding": objectSchema(schemaObject{
+				"schema_version": constString(SourceBindingSchemaVersion),
+				"sha256":         digestString(),
+			}, "schema_version", "sha256"),
 			"request_set": objectSchema(schemaObject{
-				"schema_version": portableString(MaximumArtifactSchemaVersionRunes),
+				"schema_version": constString(RequestSetSchemaVersion),
 				"sha256":         digestString(),
 				"max_requests":   schemaObject{"const": 20},
 				"max_facts":      schemaObject{"const": 200},
 			}, "schema_version", "sha256", "max_requests", "max_facts"),
 			"components": schemaObject{
-				"type":        "array",
-				"minItems":    2,
-				"maxItems":    2,
-				"prefixItems": []any{component("unirouter", "source_evidence_producer"), component("xinsight", "source_evidence_consumer")},
+				"type":     "array",
+				"minItems": 2,
+				"maxItems": 2,
+				"prefixItems": []any{
+					component("unirouter", "source_evidence_producer", UniRouterComponentContractID),
+					component("xinsight", "source_evidence_consumer", XInsightComponentContractID),
+				},
 			},
 			"source_evidence_signing": objectSchema(schemaObject{
 				"purpose":                        constString(SourceEvidencePurpose),
