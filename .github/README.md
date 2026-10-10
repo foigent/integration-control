@@ -16,7 +16,7 @@ does not itself grant permission to perform an operation.
 
 ## Try it locally
 
-Install Go 1.25.12, then clone this repository once it is public:
+Install Go 1.25.12, then clone this repository:
 
 ```sh
 git clone https://github.com/foigent/integration-control.git
@@ -38,7 +38,7 @@ own artifacts; build commands create new outputs and refuse to overwrite them.
 
 The preserved N1 distribution is `v0.1.0-candidate.1`. Its source, manifest,
 two platform binaries and checksums retain their original identities. This
-open-source preparation does not introduce N2 runtime behavior or a new release.
+source publication does not introduce N2 runtime behavior or a new release.
 The [release-bound overview](../README.md), [capability boundary](../docs/CAPABILITY-BOUNDARY.md)
 and [distribution record](../docs/DURABLE-DISTRIBUTION.md) retain their original
 scope and chronology.
@@ -61,6 +61,7 @@ UniRouter. [Third-party notices](../THIRD_PARTY_NOTICES.md) remain applicable.
 [Licensing and historical distributions](../docs/LICENSING.md) explains how
 the grant covers preserved consumer snapshots and how notices accompany them.
 
-This is an open-source preparation branch. Public visibility, anonymous release
-downloads and confidential-reporting availability still require publication
-verification. The fixed historical release assets are not rewritten here.
+This repository is public. The [N1 download page](https://github.com/foigent/integration-control/releases/tag/v0.1.0-candidate.1)
+links the complete accompanying license materials. Anonymous downloads were
+verified against the preserved hashes on 2026-10-11. GitHub private
+vulnerability reporting is enabled; see [Security](../SECURITY.md).
