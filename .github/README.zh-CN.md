@@ -11,7 +11,7 @@ integration-control 是独立于具体产品的离线 Go 工具与合同库，�
 
 ## 开始使用
 
-仓库公开后，安装 Go 1.25.12 并执行：
+安装 Go 1.25.12 并执行：
 
 ```sh
 git clone https://github.com/foigent/integration-control.git
@@ -30,5 +30,6 @@ GOTOOLCHAIN=local go run ./cmd/foigent-integration-control schemas check --dir c
 
 项目自有内容采用与 UniRouter 相同的 Apache-2.0，第三方材料保留原许可。
 N1 `v0.1.0-candidate.1` 的历史源码与五项发布资产保持原有身份；
-许可随附方式见[许可说明](../docs/LICENSING.md)。本分支仍处于开源准备阶段，
-不代表仓库已公开、匿名下载已验证或新的产品运行行为已发布。
+许可随附方式见[许可说明](../docs/LICENSING.md)与
+[N1 下载页](https://github.com/foigent/integration-control/releases/tag/v0.1.0-candidate.1)。
+仓库已公开，匿名下载与原始摘要已于 2026-10-11 核对；GitHub 私密漏洞报告已启用。
