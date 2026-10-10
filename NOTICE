@@ -1,0 +1,8 @@
+Foigent integration-control
+
+The project-owned source, documentation, schemas, fixtures and test tools in
+this repository are licensed under the Apache License, Version 2.0.
+See LICENSE and docs/LICENSING.md for scope and historical consumer identities.
+
+Third-party material retains its original copyright and license notices.
+See THIRD_PARTY_NOTICES.md and the preserved license files it identifies.
